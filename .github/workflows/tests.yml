@@ -1,10 +1,11 @@
-#Образ для градл
+# Образ для градл
 image: gradle:alpine
+
 stages:
   - tests
   - allure
 
-integration test:
+integration-test:
   stage: tests
   allow_failure: true
   script:
@@ -13,13 +14,18 @@ integration test:
     when: always
     paths:
       - build/allure-results
-  allure report:
-    stage: allure
-    script:
-      - ./gradlew allureReport
-      - echo "Allure report live here - https://${CI_PROJECT_NAMESPACE}.${CI_PAGES_DOMAIN}/-/${CI_PROJECT_NAME}/-/jobs/${CI_JOB_ID}/artifacts/build/reports/allure-report/allureReport/index.html"
-    artifacts:
-      paths:
-        - build/reports/allure-report
-      name: Allure Report
-      when: always
+  dependencies: []
+  needs: []
+
+allure-report:
+  stage: allure
+  script:
+    - ./gradlew allureReport
+    - echo "Allure report live here - https://${CI_PROJECT_NAMESPACE}.${CI_PAGES_DOMAIN}/-/${CI_PROJECT_NAME}/-/jobs/${CI_JOB_ID}/artifacts/build/reports/allure-report/allureReport/index.html"
+  artifacts:
+    paths:
+      - build/reports/allure-report
+    name: Allure Report
+    when: always
+  dependencies:
+    - integration-test
