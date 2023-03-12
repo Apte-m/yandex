@@ -1,31 +1,45 @@
 # Образ для градл
 image: gradle:alpine
-
+# Определение этапов
 stages:
   - tests
   - allure
 
+# Определение работы для запуска интеграционных тестов
 integration-test:
+  # Задание этапа
   stage: tests
+  # Разрешение на ошибки
   allow_failure: true
+  # Определение скриптов для выполнения работы
   script:
     - ./gradlew -x test uiTests
+  # Определение артефактов для сохранения
   artifacts:
     when: always
     paths:
       - build/allure-results
-  dependencies: []
-  needs: []
 
+# Определение работы для создания отчета в Allure
 allure-report:
+  # Задание этапа
   stage: allure
+  # Определение скриптов для выполнения работы
   script:
     - ./gradlew allureReport
     - echo "Allure report live here - https://${CI_PROJECT_NAMESPACE}.${CI_PAGES_DOMAIN}/-/${CI_PROJECT_NAME}/-/jobs/${CI_JOB_ID}/artifacts/build/reports/allure-report/allureReport/index.html"
+  # Определение артефактов для сохранения
   artifacts:
     paths:
       - build/reports/allure-report
     name: Allure Report
     when: always
-  dependencies:
-    - integration-test
+
+# Определение событий для запуска workflow
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
