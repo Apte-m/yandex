@@ -1,4 +1,4 @@
-name: Build and Test with Gradle
+name: Build, Test, and Generate Allure Report
 
 on:
   push:
@@ -36,19 +36,19 @@ jobs:
       - name: Generate Allure report
         run: ./gradlew allureReport
 
-    allure-report:
-      needs: integration-test
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2
-        - name: Set up JDK 11
-          uses: actions/setup-java@v1
-          with:
-            java-version: 11
-        - name: Generate Allure report
-          uses: allure-framework/allure-github-action@v2
-          with:
-            allure-version: '2.14.0'
-            results-directory: build/allure-results
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  allure-report:
+    needs: integration-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Generate Allure report
+        uses: allure-framework/allure-github-action@v2
+        with:
+          allure-version: '2.14.0'
+          results-directory: build/allure-results
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
