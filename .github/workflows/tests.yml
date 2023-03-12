@@ -32,20 +32,13 @@ jobs:
         run: chmod +x gradlew
       - name: Run integration tests with Gradle
         run: ./gradlew test
-  Allure_report:
-    needs: integration-test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Generate Allure report
-        run: |
-          ./gradlew allureReport
-          echo "Allure report live here - https://${{ github.repository }}/-/jobs/${{ github.job_id }}/artifacts/build/reports/allure-report/allureReport/index.html"
-      - name: Upload Allure report
-        uses: actions/upload-artifact@v2
-        with:
-          name: allure-report
-          path: build/reports/allure-report/allureReport/
-  artifacts:
-    when: always
-    paths:
-      - build/reports/allure-report/allureReport/
+  Allure report:
+    stage: allure
+    script:
+      - ./gradlew allureReport
+      - echo "Allure report live here - https://${CI_PROJECT_NAMESPACE}.${CI_PAGES_DOMAIN}/-/${CI_PROJECT_NAME}/-/jobs/${CI_JOB_ID}/artifacts/build/reports/allure-report/allureReport/index.html"
+    artifacts:
+      paths:
+        - build/reports/allure-report
+      name: Allure Report
+      when: always
