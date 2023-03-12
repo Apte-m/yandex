@@ -1,39 +1,35 @@
-# Образ для сборки
-image: gradle:alpine
-on: [push]
+name: Build and Test with Gradle
 
-# Определение этапов
-stages:
-  - test
-  - report
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
-# Определение работы для запуска тестов и генерации отчета в Allure
-test:
-  # Задание этапа
-  stage: test
-  # Определение скриптов для выполнения работы
-  script:
-    - ./gradlew clean test
-    - ./gradlew allureReport
-  # Определение артефактов для сохранения
-  artifacts:
-    when: always
-    paths:
-      - build/reports/allure-report
-      - build/test-results
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        run: ./gradlew build
 
-# Определение работы для загрузки отчета в Allure
-report:
-  # Задание этапа
-  stage: report
-  # Определение скриптов для выполнения работы
-  script:
-    - ./gradlew allureServe
-  # Определение правил загрузки отчета в Allure Serve
-  env:
-    # Указание URL для доступа к отчету в Allure Serve
-    ALLURE_SERVER_URL: https://example.com/allure
-  # Определение секретов для загрузки отчета в Allure Serve
-  secrets:
-    # Токен доступа к Allure Serve
-    ALLURE_SERVER_TOKEN: ${{ secrets.ALLURE_SERVER_TOKEN }}
+  integration-test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Run integration tests with Gradle
+        run: ./gradlew test
