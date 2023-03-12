@@ -1,46 +1,38 @@
-# Образ для градл
+# Образ для сборки
 image: gradle:alpine
-
-# Определение событий для запуска workflow
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
 
 # Определение этапов
 stages:
-  - tests
-  - allure
+  - test
+  - report
 
-# Определение работ для запуска в каждом этапе
-jobs:
-  integration-test:
-    # Задание этапа
-    stage: tests
-    # Разрешение на ошибки
-    allow_failure: true
-    # Определение скриптов для выполнения работы
-    script:
-      - ./gradlew -x test uiTests
-    # Определение артефактов для сохранения
-    artifacts:
-      when: always
-      paths:
-        - build/allure-results
+# Определение работы для запуска тестов и генерации отчета в Allure
+test:
+  # Задание этапа
+  stage: test
+  # Определение скриптов для выполнения работы
+  script:
+    - ./gradlew clean test
+    - ./gradlew allureReport
+  # Определение артефактов для сохранения
+  artifacts:
+    when: always
+    paths:
+      - build/reports/allure-report
+      - build/test-results
 
-  allure-report:
-    # Задание этапа
-    stage: allure
-    # Определение скриптов для выполнения работы
-    script:
-      - ./gradlew allureReport
-      - echo "Allure report live here - https://${CI_PROJECT_NAMESPACE}.${CI_PAGES_DOMAIN}/-/${CI_PROJECT_NAME}/-/jobs/${CI_JOB_ID}/artifacts/build/reports/allure-report/allureReport/index.html"
-    # Определение артефактов для сохранения
-    artifacts:
-      paths:
-        - build/reports/allure-report
-      name: Allure Report
-      when: always
+# Определение работы для загрузки отчета в Allure
+report:
+  # Задание этапа
+  stage: report
+  # Определение скриптов для выполнения работы
+  script:
+    - ./gradlew allureServe
+  # Определение правил загрузки отчета в Allure Serve
+  env:
+    # Указание URL для доступа к отчету в Allure Serve
+    ALLURE_SERVER_URL: https://example.com/allure
+  # Определение секретов для загрузки отчета в Allure Serve
+  secrets:
+    # Токен доступа к Allure Serve
+    ALLURE_SERVER_TOKEN: ${{ secrets.ALLURE_SERVER_TOKEN }}
