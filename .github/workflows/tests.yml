@@ -33,12 +33,12 @@ jobs:
         run: chmod +x gradlew
       - name: Run integration tests with Gradle
         run: ./gradlew test
-Allure report:
-  stage: allure
-  script:
-    - ./gradlew allureReport
-    - echo "Allure report live here -
-      https://${CI_PROJECT_NAMESPACE}.${CI_PAGES_DOMAIN}/-/${CI_PROJECT_NAME}/-/jobs/${CI_JOB_ID}/artifacts/build/reports/allure-report/allureReport/index.html"
+  Allure report:
+    stage: allure
+    script:
+      - ./gradlew allureReport
+      - echo "Allure report live here -
+        https://${CI_PROJECT_NAMESPACE}.${CI_PAGES_DOMAIN}/-/${CI_PROJECT_NAME}/-/jobs/${CI_JOB_ID}/artifacts/build/reports/allure-report/allureReport/index.html"
   artifacts:
     when: always
     paths:
