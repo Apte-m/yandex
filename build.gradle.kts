@@ -31,8 +31,10 @@ dependencies {
     implementation("io.qameta.allure:allure-rest-assured:2.21.0")
 
 
-    tasks.test {
+
+    tasks.withType<Test> {
         useJUnitPlatform()
+        systemProperty("allure.results.directory", "${buildDir.path}/allure-results")
     }
 
     tasks.withType<KotlinCompile> {
