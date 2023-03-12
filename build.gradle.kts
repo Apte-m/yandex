@@ -34,12 +34,6 @@ dependencies {
         useJUnitPlatform()
     }
 
-    tasks.register<Test>("integrationTest") {
-        useJUnitPlatform()
-        testClassesDirs = sourceSets.getByName("integrationTest").output.classesDirs
-        classpath = sourceSets.getByName("integrationTest").runtimeClasspath
-        systemProperty("allure.results.directory", buildDir.path + "/allure-results")
-    }
 
     tasks.withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "1.8"
