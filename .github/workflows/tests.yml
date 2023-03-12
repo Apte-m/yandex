@@ -46,9 +46,9 @@ jobs:
         with:
           java-version: 11
       - name: Generate Allure report
-        uses: allure-framework/allure-github-action@v2
+        uses: simple-elf/allure-report-action@master
         with:
-          allure-version: '2.14.0'
+          allure-version: '2.11.2'
           results-directory: build/allure-results
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
