@@ -1,5 +1,6 @@
 # Образ для сборки
 image: gradle:alpine
+on: [push]
 
 # Определение этапов
 stages:
