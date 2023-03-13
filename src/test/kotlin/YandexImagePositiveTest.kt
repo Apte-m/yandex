@@ -16,17 +16,17 @@ import utils.Variable.*
 
 
 @ExtendWith(Specification::class)
-class YandexTest {
+class YandexImagePositiveTest {
 
-    val disk = Disk()
-    var file = File()
+    val d = Disk()
+    var f = File()
 
     @Test
     @BasePath("/files")
     @DisplayName("поиск файла")
     fun test() {
-        file = disk.getInfo().`as`(File::class.java)
-        assertTrue(file.items?.any { item -> item?.name == "Москва.jpg" } ?: false)
+        f = d.getInfo().`as`(File::class.java)
+        assertTrue(f.items?.any { item -> item?.name == "Москва.jpg" } ?: false)
     }
 
 
@@ -37,11 +37,11 @@ class YandexTest {
     // Тут конвертируется любой  json  в обьект, который нужен и может быть любое количество
     fun createImage(@JsonToObject image: Image) {
         //        Загрузка картинки
-        disk.post(image.toMap())
+        d.post(image.toMap())
         //        Проверка, что картинка загружена
         RestAssured.requestSpecification = RequestSpecBuilder().setBasePath("/files").build()
-        file = disk.getInfo().`as`(File::class.java)
-        assertTrue(file.items?.any { item -> item?.name == "${image.path}" } ?: false)
+        f = d.getInfo().`as`(File::class.java)
+        assertTrue(f.items?.any { item -> item?.name == "${image.path}" } ?: false)
     }
 
     @BasePath("/move")
@@ -49,12 +49,12 @@ class YandexTest {
     @DisplayName("смена имени файла")
     @ValueSource(strings = ["rename/rename.first.json", "rename/rename.second.json"])
     fun renameImage(@JsonToObject rename: Rename) {
-        disk.post(rename.toMap())
+        d.post(rename.toMap())
     }
 
     @Test
     @DisplayName("Удаление картинки")
     fun deleteById() {
-        disk.delete("ТестоваяКартинка (2)")
+        d.delete("ТестоваяКартинка")
     }
 }
