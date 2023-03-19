@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.*
 import utils.Variable
 
 class Specification() : BeforeEachCallback, TestInstancePostProcessor, ParameterResolver {
+
     override fun beforeEach(context: ExtensionContext?) {
         val basePathAnnotationC = context?.requiredTestClass?.getAnnotation(BasePath::class.java)
         val basePathAnnotationM = context?.requiredTestMethod?.getAnnotation(BasePath::class.java)
@@ -41,4 +42,10 @@ class Specification() : BeforeEachCallback, TestInstancePostProcessor, Parameter
     override fun resolveParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Any {
         return extensionContext.getStore(ExtensionContext.Namespace.GLOBAL).get("specification", RequestSpecification::class.java)
     }
+
+    fun setCustomBasePath(basePath: String) {
+        RestAssured.requestSpecification = RequestSpecBuilder().setBasePath(basePath).build()
+    }
+
+
 }

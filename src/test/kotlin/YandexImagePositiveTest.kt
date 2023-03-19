@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.extension.RegisterExtension
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import pojo.File
@@ -18,8 +19,9 @@ import utils.Variable.*
 @ExtendWith(Specification::class)
 class YandexImagePositiveTest {
 
-    val d = Disk()
-    var f = File()
+    private val d = Disk()
+    private var f = File()
+
 
     @Test
     @BasePath("/files")
@@ -39,7 +41,8 @@ class YandexImagePositiveTest {
         //        Загрузка картинки
         d.post(image.toMap())
         //        Проверка, что картинка загружена
-        RestAssured.requestSpecification = RequestSpecBuilder().setBasePath("/files").build()
+
+        Specification().setCustomBasePath("/files")
         f = d.getInfo().`as`(File::class.java)
         assertTrue(f.items?.any { item -> item?.name == "${image.path}" } ?: false)
     }
