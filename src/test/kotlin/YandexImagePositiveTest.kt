@@ -3,14 +3,10 @@ import extention.JsonToObject
 import io.restassured.RestAssured.get
 import io.restassured.RestAssured.given
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.MethodSource
 import org.junit.jupiter.params.provider.ValueSource
-import pojo.File
 import pojo.Image
 import pojo.Rename
 import utils.Variable.*
@@ -35,7 +31,7 @@ class YandexImagePositiveTest {
 
     @ParameterizedTest
     @DisplayName("смена имени файла")
-    @ValueSource(strings = ["rename/rename.first.json"])
+    @ValueSource(strings = ["rename/rename.json"])
 
     fun renameImage(@JsonToObject rename: Rename) {
 //      Переименование
