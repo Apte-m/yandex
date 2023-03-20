@@ -18,6 +18,8 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
     testImplementation("com.squareup.retrofit2:converter-jackson:2.9.0")
     testImplementation("io.rest-assured:kotlin-extensions:5.3.0")
+    testImplementation("org.assertj:assertj-core:3.24.2")
+
     testImplementation("io.qameta.allure:allure-junit5:2.21.0") {
         exclude(module = "junit-jupiter-api")
         exclude(module = "junit-jupiter-engine")
@@ -39,7 +41,5 @@ dependencies {
         kotlinOptions.jvmTarget = "1.8"
     }
 
-    application {
-        mainClass.set("MainKt")
-    }
+
 }

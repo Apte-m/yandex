@@ -24,8 +24,8 @@ class Specification() : BeforeEachCallback, TestInstancePostProcessor, Parameter
             .setBaseUri(Variable.URL.value)
             .setBasePath(basePath)
             .setContentType(ContentType.JSON)
-            .addFilter(ResponseLoggingFilter())
-            .addFilter(RequestLoggingFilter())
+//            .addFilter(ResponseLoggingFilter())
+//            .addFilter(RequestLoggingFilter())
             .addFilter(AllureRestAssured())
             .build()
     }
