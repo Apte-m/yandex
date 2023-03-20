@@ -43,7 +43,7 @@ class Specification() : BeforeEachCallback, TestInstancePostProcessor, Parameter
         return extensionContext.getStore(ExtensionContext.Namespace.GLOBAL).get("specification", RequestSpecification::class.java)
     }
 
-    fun setCustomBasePath(basePath: String) {
+    fun path(basePath: String) {
         RestAssured.requestSpecification = RequestSpecBuilder().setBasePath(basePath).build()
     }
 

@@ -1,13 +1,10 @@
 import endpoint.Disk
 import extention.BasePath
 import extention.JsonToObject
-import io.restassured.RestAssured
-import io.restassured.builder.RequestSpecBuilder
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.junit.jupiter.api.extension.RegisterExtension
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import pojo.File
@@ -20,6 +17,7 @@ import utils.Variable.*
 class YandexImagePositiveTest {
 
     private val d = Disk()
+    private val spc = Specification()
     private var f = File()
 
 
@@ -33,7 +31,7 @@ class YandexImagePositiveTest {
 
 
     @BasePath("/upload")
-    @ValueSource(strings = ["image/image.first.json","image/image.second.json"])
+    @ValueSource(strings = ["image/image.first.json", "image/image.second.json"])
     @ParameterizedTest
     @DisplayName("создание файла и  проверка его создания")
     // Тут конвертируется любой  json  в обьект, который нужен и может быть любое количество
@@ -41,8 +39,7 @@ class YandexImagePositiveTest {
         //        Загрузка картинки
         d.post(image.toMap())
         //        Проверка, что картинка загружена
-
-        Specification().setCustomBasePath("/files")
+        spc.path("/files")
         f = d.getInfo().`as`(File::class.java)
         assertTrue(f.items?.any { item -> item?.name == "${image.path}" } ?: false)
     }
