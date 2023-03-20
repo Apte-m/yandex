@@ -7,5 +7,6 @@ import org.junit.jupiter.api.extension.ExtensionContext
 class FileExtension : AfterAllCallback {
     override fun afterAll(context: ExtensionContext?) {
         RestAssured.given().delete("ТестоваяКартинка")
+        RestAssured.given().delete("ТестоваяКартинка")
     }
 }
