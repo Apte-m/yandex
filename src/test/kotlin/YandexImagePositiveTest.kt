@@ -2,6 +2,8 @@ import extention.FileExtension
 import extention.JsonToObject
 import io.qameta.allure.Allure
 import io.qameta.allure.Allure.ThrowableRunnableVoid
+import io.qameta.allure.AllureId
+import io.qameta.allure.Owner
 import io.restassured.RestAssured.get
 import io.restassured.RestAssured.given
 import org.assertj.core.api.Assertions.assertThat
@@ -20,6 +22,8 @@ class YandexImagePositiveTest {
     @ParameterizedTest
     @DisplayName("смена имени файла")
     @ValueSource(strings = ["rename/rename.json"])
+    @Owner("Одинцов")
+    @AllureId("1")
     fun renameImage(@JsonToObject rename: Rename) {
 
         Allure.step("Переименование картинки", ThrowableRunnableVoid {
