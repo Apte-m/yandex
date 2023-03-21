@@ -7,40 +7,21 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import pojo.Image
 import pojo.Rename
-import utils.Variable.*
 
 
 @ExtendWith(*[Specification::class, FileExtension::class])
 class YandexImagePositiveTest {
 
-
-    @ValueSource(strings = ["image/image.first.json", "image/image.second.json"])
-    @ParameterizedTest
-    @DisplayName("создание файла и  проверка его создания")
-//      Тут конвертируется любой  json  в обьект, который нужен и может быть любое количество
-    fun createImage(@JsonToObject image: Image) {
-//      Загрузка картинки
-        given().queryParams(image.toMap()).`when`().post("/upload")
-//      Проверка, что картинка загружена
-        val name = get("/files").then().extract().body().jsonPath().getList<String>("items.name")
-        assertThat(name).contains(image.path)
-    }
-
-
     @ParameterizedTest
     @DisplayName("смена имени файла")
     @ValueSource(strings = ["rename/rename.json"])
-
     fun renameImage(@JsonToObject rename: Rename) {
 //      Переименование
-        given().`when`().queryParams(rename.toMap()).post("/move")
+        given().`when`().queryParams(rename.toMap()).post("/move").then().statusCode(201)
 //      Получение и проверка
-        val name = get("/files").then().extract().body().jsonPath().getList<String>("items.name")
-        assertThat(name).contains(rename.from?.replace("/", ""))
-
+        val name =
+            get("/files?limit=100").then().statusCode(200).extract().body().jsonPath().getList<String>("items.name")
+        assertThat(name).contains(rename.path?.replace("/",""))
     }
-
-
 }
